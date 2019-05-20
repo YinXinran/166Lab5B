@@ -1,5 +1,7 @@
 import java.util.*;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.math.*;
 public class SomeMenuFunctions {
 
@@ -17,6 +19,11 @@ public class SomeMenuFunctions {
 	}
 	
 	//menu 3
+	public static void dayDifference(LocalDate dayOne, LocalDate dayTwo) 
+	{
+		long daysPeriod = ChronoUnit.DAYS.between(dayOne, dayTwo);
+		System.out.println(daysPeriod);
+	}
 	//menu 4
 	public static double speed(double distance, double time)
 	{
@@ -29,7 +36,9 @@ public class SomeMenuFunctions {
 	public static String checkLeapYear(int year)
 	{
 		String hasil = "";
-		if(year % 4 == 0)
+		LocalDate mockDate = LocalDate.of(year, 1, 1);
+		boolean kabisat = mockDate.isLeapYear();
+		if(kabisat == true)
 		{
 			hasil = year + " adalah tahun kabisat";
 			System.out.println(hasil);
@@ -42,13 +51,31 @@ public class SomeMenuFunctions {
 		return hasil;
 	}
 	//menu 6
+	public static void ageDifference(String nameOne, LocalDate tanggalSatu,
+									 String nameTwo, LocalDate tanggalDua)
+	{
+		LocalDate today = LocalDate.now();
+		int ageOne = (int)ChronoUnit.YEARS.between(today, tanggalSatu);
+		int ageTwo = (int)ChronoUnit.YEARS.between(today, tanggalDua);
+		
+		int ageDifference = ageOne - ageTwo;
+		
+		if (ageDifference < 0)
+		{
+			ageDifference = (ageDifference * -1);
+		}
+		
+		System.out.printf("Perbedaan umur antara %s dengan %s adalah %d tahun \n", 
+				nameOne,nameTwo,ageDifference);
+	}
 	
 	public static void main(String[] args) {
 		//set global variables
 		Scanner scanner = new Scanner(System.in);
+		boolean bool = true;
 		
 		//Menu Start
-		while(true)
+		while(bool)
 		{
 			System.out.println("Menu Functions");
 			System.out.println("1. Greetings");
@@ -74,8 +101,32 @@ public class SomeMenuFunctions {
 					String yourName = scanner.nextLine();
 					greetingsWithName(yourName);
 					break;
-				case 3: //Date difference
-					break;
+				case 3: //Day difference
+					
+					while (bool)
+					{
+						try
+						{
+							DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+							
+							System.out.println("Input Tanggal Pertama (Misal: 13/04/2005)");
+							String dateOne = scanner.nextLine();
+							LocalDate stringToDateOne = LocalDate.parse(dateOne, formatter);
+							
+							System.out.println("Input Tanggal Kedua (Misal: 13/04/2005)");
+							String dateTwo= scanner.nextLine();
+							LocalDate stringToDateTwo = LocalDate.parse(dateTwo, formatter);
+							
+							dayDifference(stringToDateOne, stringToDateTwo);
+	
+						}
+						catch (Exception exceptions)
+						{
+							System.out.println("Input tanggal Salah, Input Tanggal lagi");
+						} break;
+						
+					} 
+					
 				case 4: //Calculate Speed
 					System.out.println("Input Distance (km): ");
 					double distance = scanner.nextDouble();
@@ -86,18 +137,56 @@ public class SomeMenuFunctions {
 					
 					break;
 				case 5: //Leap year check
-					System.out.println("Input Tahun: ");
-					int year = scanner.nextInt();
-					scanner.nextLine();
-					checkLeapYear(year);
-					break;
+					try
+					{
+						System.out.println("Input Tahun");
+						int year = scanner.nextInt();
+						scanner.nextLine();
+						checkLeapYear(year);
+						break;
+					}
+					catch (Exception exceptions)
+					{
+						System.out.println("Input salah. Tolong Input lagi");
+					}
 				case 6: //Age Difference
-					break;
+					while(bool)
+					{
+						try 
+						{
+							DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+							
+							//input tanggal pertama
+							System.out.println("Input Nama 1: ");
+							String nameOne = scanner.nextLine();
+							System.out.println("Input Tanggal 1: ");
+							String tanggalSatu = scanner.nextLine();
+
+							LocalDate stringToDateOne = LocalDate.parse(tanggalSatu, formatter);
+							
+							//input tanggal kedua
+							System.out.println("Input Nama 2: ");
+							String nameTwo = scanner.nextLine();
+							System.out.println("Input Tanggal 2: ");
+							String tanggalDua = scanner.nextLine();
+
+							LocalDate stringToDateTwo = LocalDate.parse(tanggalDua, formatter);
+							
+							ageDifference(nameOne, stringToDateOne,nameTwo,stringToDateTwo);
+							break;
+							
+						}
+						catch(Exception exceptions)
+						{
+							System.out.println("Input Salah. Tolong input lagi");
+							bool = false;
+						}
+					}
 				case 7: //Exit
 					System.exit(0);
 					break;
 				default:
-					System.out.println("Tolong input 1-6: ");
+					System.out.println("Tolong input 1-7: ");
 					break;
 				}
 		}
