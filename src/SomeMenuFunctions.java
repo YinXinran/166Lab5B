@@ -77,6 +77,7 @@ public class SomeMenuFunctions {
 		//Menu Start
 		while(bool)
 		{
+			System.out.println("Hello from YinXinran");
 			System.out.println("Menu Functions");
 			System.out.println("1. Greetings");
 			System.out.println("2. Greetings with name");
